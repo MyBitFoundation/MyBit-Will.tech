@@ -1,0 +1,21 @@
+{
+  "name": "wills",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "bignumber.js": "^7.2.1"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.2",
+    "solidity-coverage": "^0.5.7"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC"
+}

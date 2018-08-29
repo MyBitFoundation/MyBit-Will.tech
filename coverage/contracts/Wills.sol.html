@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/Wills.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> Wills.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>25/25</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>24/24</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>13/13</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>51/51</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">pragma solidity ^0.4.24;
+&nbsp;
+import './SafeMath.sol';
+import './Database.sol';
+import './MyBitBurner.sol';
+&nbsp;
+// @notice This contract allows someone to leave ETH for another user in the case that they become unresponsive for x blocks
+// TODO: can structure this to have the recipient claim creators death, which starts the proofExpiration. Problem with this approach is that we need a good way to notify the creator.
+contract Wills {
+  using SafeMath for uint;
+&nbsp;
+  Database public database;
+  MyBitBurner public mybBurner;
+  address public owner;
+&nbsp;
+  uint public mybFee = 250;
+  bool public expired = false;
+&nbsp;
+  constructor(address _database, address _mybTokenBurner) public{
+    owner = msg.sender;
+    database = Database(_database);
+    mybBurner = MyBitBurner(_mybTokenBurner);
+  }
+&nbsp;
+  function createWill(address _recipient, uint _blocksBetweenProofs, bool _revokeable)
+  external
+  payable
+  notZero(_blocksBetweenProofs)
+  validAddress(_recipient)
+  returns (bytes32 id) {
+    require(!expired);
+    //Test whether will exists
+    id = keccak256(abi.encodePacked(msg.sender, _recipient, msg.value));  // Note user cannot create another will with the same amount + recipient
+    require(database.addressStorage(keccak256(abi.encodePacked('willCreator', id))) == address(0));   // Make sure struct isn't already created
+&nbsp;
+    database.setAddress(keccak256(abi.encodePacked('willCreator', id)), msg.sender);
+    database.setAddress(keccak256(abi.encodePacked('willRecipient', id)), _recipient);
+    database.setUint(keccak256(abi.encodePacked('willAmount', id)), msg.value);
+    database.setUint(keccak256(abi.encodePacked('willBlocksBetweenProofs', id)), _blocksBetweenProofs);
+    database.setUint(keccak256(abi.encodePacked('willProofExpiration', id)), _blocksBetweenProofs.add(block.number));
+    database.setBool(keccak256(abi.encodePacked('willRevokeable', id)), _revokeable);
+&nbsp;
+    emit LogWillCreated(msg.sender, _recipient, msg.value, id);
+    return id;
+  }
+&nbsp;
+  function proveExistence(bytes32 _id)
+  external
+  onlyCaller( database.addressStorage(keccak256(abi.encodePacked('willCreator', _id))) ){
+    require( database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))).sub(block.number) &lt; database.uintStorage(keccak256(abi.encodePacked('willBlocksBetweenProofs', _id))) );  // Can only extend proofExpiration once
+    database.setUint(keccak256(abi.encodePacked('willProofExpiration', _id)), database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))).add( database.uintStorage(keccak256(abi.encodePacked('willBlocksBetweenProofs', _id))) ) );
+  }
+&nbsp;
+  function revokeWill(bytes32 _id)
+  external
+  isRevokeable(_id)
+  onlyCaller( database.addressStorage(keccak256(abi.encodePacked('willCreator', _id))) ){
+    require( block.number &lt; database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))) );
+    uint amountWEI = database.uintStorage(keccak256(abi.encodePacked('willAmount', _id)));
+    database.deleteAddress(keccak256(abi.encodePacked('willCreator', _id)));
+    database.deleteAddress(keccak256(abi.encodePacked('willRecipient', _id)));
+    database.deleteUint(keccak256(abi.encodePacked('willAmount', _id)));
+    database.deleteUint(keccak256(abi.encodePacked('willBlocksBetweenProofs', _id)));
+    database.deleteUint(keccak256(abi.encodePacked('willProofExpiration', _id)));
+    database.deleteBool(keccak256(abi.encodePacked('willRevokeable', _id)));
+    msg.sender.transfer(amountWEI);
+    emit LogWillRevoked(_id, msg.sender, amountWEI);
+  }
+&nbsp;
+  function claimWill(bytes32 _id)
+  external
+  onlyCaller( database.addressStorage(keccak256(abi.encodePacked('willRecipient', _id))) ){
+    require( block.number &gt;= database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))) );
+    uint amountWEI = database.uintStorage(keccak256(abi.encodePacked('willAmount', _id)));
+    database.deleteAddress(keccak256(abi.encodePacked('willCreator', _id)));
+    database.deleteAddress(keccak256(abi.encodePacked('willRecipient', _id)));
+    database.deleteUint(keccak256(abi.encodePacked('willAmount', _id)));
+    database.deleteUint(keccak256(abi.encodePacked('willBlocksBetweenProofs', _id)));
+    database.deleteUint(keccak256(abi.encodePacked('willProofExpiration', _id)));
+    database.deleteBool(keccak256(abi.encodePacked('willRevokeable', _id)));
+    msg.sender.transfer(amountWEI);
+    emit LogWillClaimed(_id, msg.sender, amountWEI);
+  }
+&nbsp;
+&nbsp;
+  function changeBlocksBetweenProofs(bytes32 _id, uint _newDesiredBlocks)
+  external
+  onlyCaller( database.addressStorage(keccak256(abi.encodePacked('willCreator', _id))) )
+  notZero(_newDesiredBlocks) {
+      database.setUint(keccak256(abi.encodePacked('willBlocksBetweenProofs', _id)), _newDesiredBlocks);
+&nbsp;
+  }
+&nbsp;
+  // @notice If called by owner, this function prevents more Trust contracts from being made once
+  // @notice Old contracts will continue to function
+  function closeContract()
+  external {
+    require(msg.sender == owner);
+    require (!expired);
+    expired = true;
+  }
+&nbsp;
+  function changeMYBFee(uint _newFee)
+  external {
+    require(msg.sender == owner);
+    mybFee = _newFee;
+  }
+&nbsp;
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //                                            View functions
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+&nbsp;
+  function getWill(bytes32 _id)
+  external
+  view
+  returns (address, address, uint, uint, uint, bool) {
+    return(
+      database.addressStorage(keccak256(abi.encodePacked('willCreator', _id))),
+      database.addressStorage(keccak256(abi.encodePacked('willRecipient', _id))),
+      database.uintStorage(keccak256(abi.encodePacked('willAmount', _id))),
+      database.uintStorage(keccak256(abi.encodePacked('willBlocksBetweenProofs', _id))),
+      database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))),
+      database.boolStorage(keccak256(abi.encodePacked('willRevokeable', _id)))
+    );
+  }
+&nbsp;
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //                                            Modifiers
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+&nbsp;
+  // @notice reverts if msg.sender isn't the specified caller
+  modifier onlyCaller(address _caller) {
+    require(msg.sender == _caller);
+    _;
+  }
+&nbsp;
+  // @notice reverts if will is not revokeable
+  modifier isRevokeable(bytes32 _id) {
+    require(database.boolStorage(keccak256(abi.encodePacked('willRevokeable', _id))));
+    _;
+  }
+&nbsp;
+  // @notice reverts if integer is 0
+  modifier notZero(uint _number) {
+    require(_number &gt; 0);
+    _;
+  }
+&nbsp;
+  modifier validAddress(address _addr) {
+    require(_addr != address(0));
+    _;
+  }
+&nbsp;
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //                                            Events
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+&nbsp;
+  event LogWillCreated(address indexed _creator, address _recipient, uint _amount, bytes32 _id);
+  event LogWillClaimed(bytes32 indexed _id, address _recipient, uint _amount);
+  event LogWillRevoked(bytes32 indexed _id, address _recipient, uint _amount);
+&nbsp;
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Aug 28 2018 13:08:26 GMT-0700 (PDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
