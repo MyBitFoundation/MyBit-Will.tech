@@ -29,6 +29,7 @@ contract Wills {
   validAddress(_recipient)
   returns (bytes32 id) {
     require(!expired);
+    require(mybBurner.burn(msg.sender, mybFee));
     //Test whether will exists
     id = keccak256(abi.encodePacked(msg.sender, _recipient, msg.value));  // Note user cannot create another will with the same amount + recipient
     require(database.addressStorage(keccak256(abi.encodePacked('willCreator', id))) == address(0));   // Make sure struct isn't already created
