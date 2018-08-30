@@ -22,6 +22,9 @@ contract Wills {
     mybBurner = MyBitBurner(_mybTokenBurner);
   }
 
+  // @param (address) _recipient = Address of the recipient of the will`
+  // @param (uint) _blocksBetweenProofs = Number of blocks required without proof of existence before will funds are released
+  // @param (bool) _revokeable = Boolean that sets whether this will can be revoked by the creator
   function createWill(address _recipient, uint _blocksBetweenProofs, bool _revokeable)
   external
   payable
@@ -45,6 +48,7 @@ contract Wills {
     return id;
   }
 
+  // @param (bytes32) _id = Bill ID that is returned by createWill()
   function proveExistence(bytes32 _id)
   external
   onlyCaller( database.addressStorage(keccak256(abi.encodePacked('willCreator', _id))) ){
@@ -52,6 +56,7 @@ contract Wills {
     database.setUint(keccak256(abi.encodePacked('willProofExpiration', _id)), database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))).add( database.uintStorage(keccak256(abi.encodePacked('willBlocksBetweenProofs', _id))) ) );
   }
 
+  // @param (bytes32) _id = Bill ID that is returned by createWill()
   function revokeWill(bytes32 _id)
   external
   isRevokeable(_id)
@@ -68,6 +73,7 @@ contract Wills {
     emit LogWillRevoked(_id, msg.sender, amountWEI);
   }
 
+  // @param (bytes32) _id = Bill ID that is returned by createWill()
   function claimWill(bytes32 _id)
   external
   onlyCaller( database.addressStorage(keccak256(abi.encodePacked('willRecipient', _id))) ){
@@ -83,7 +89,8 @@ contract Wills {
     emit LogWillClaimed(_id, msg.sender, amountWEI);
   }
 
-
+  // @param (bytes32) _id = Bill ID that is returned by createWill()
+  // @param (uint) _newDesiredBlocks = Number of blocks required without proof of existence before will funds are released
   function changeBlocksBetweenProofs(bytes32 _id, uint _newDesiredBlocks)
   external
   onlyCaller( database.addressStorage(keccak256(abi.encodePacked('willCreator', _id))) )
@@ -101,6 +108,7 @@ contract Wills {
     expired = true;
   }
 
+  // @param (uint) _newFee = New MyBit token burn fee
   function changeMYBFee(uint _newFee)
   external {
     require(msg.sender == owner);
@@ -111,6 +119,7 @@ contract Wills {
   //                                            View functions
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  // @param (bytes32) _id = Bill ID that is returned by createWill()
   function getWill(bytes32 _id)
   external
   view
