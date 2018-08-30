@@ -1,7 +1,7 @@
 {
   "name": "wills",
   "version": "1.0.0",
-  "description": "",
+  "description": "dApp to setup a will in a smart contract",
   "main": "truffle-config.js",
   "directories": {
     "test": "test"
@@ -16,6 +16,20 @@
   "scripts": {
     "test": "mocha"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "MyBit Foundation",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MyBitFoundation/dapp-will.git"
+  },
+  "keywords": [
+    "Ethereum",
+    "solidity",
+    "will",
+    "finance"
+  ],
+  "bugs": {
+    "url": "https://github.com/MyBitFoundation/dapp-will/issues"
+  },
+  "homepage": "https://github.com/MyBitFoundation/dapp-will#readme"
 }

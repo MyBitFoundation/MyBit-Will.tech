@@ -4,7 +4,7 @@ pragma solidity ^0.4.24;
 // https://theethereum.wiki/w/index.php/ERC20_Token_Standard
 
 import './SafeMath.sol';
-import '../interfaces/ERC20Interface.sol';
+import './interfaces/ERC20Interface.sol';
 
 // ----------------------------------------------------------------------------
 // Receive approval and then execute function

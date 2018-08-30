@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 import './SafeMath.sol';
-import '../interfaces/PullPayment.sol';
+import './interfaces/PullPayment.sol';
 
 // @notice This contract allows someone to leave ETH for a beneficiary
 // @notice assumes each beneficiary receives equal amount
