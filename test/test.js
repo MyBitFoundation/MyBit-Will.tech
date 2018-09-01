@@ -84,6 +84,7 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
 
   it('Fail to create will', async() => {
     try{
+      await token.approve(burner.address, burnFee);
       await will.createWill(recipient, 0, true, {value: (5 * WEI)});
     } catch(e){
       console.log('Cant have 0 blocks between proof');
@@ -92,6 +93,7 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
 
   it('Fail to create will', async() => {
     try{
+      await token.approve(burner.address, burnFee);
       await will.createWill('0', 5, true, {value: (5 * WEI)});
     } catch(e){
       console.log('Invalid recipient address');
@@ -99,6 +101,7 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
   });
 
   it('Create will', async() => {
+    await token.approve(burner.address, burnFee);
     tx = await will.createWill(recipient, 5, true, {value: (5 * WEI)});
     //console.log(tx);
     id = tx.logs[0].args._id;
@@ -130,6 +133,7 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
   });
 
   it('Create will', async() => {
+    await token.approve(burner.address, burnFee);
     tx = await will.createWill(recipient, 5, true, {value: (5 * WEI)});
     //console.log(tx);
     id = tx.logs[0].args._id;
@@ -259,6 +263,7 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
   });
 
   it('Create irrevocable will', async() => {
+    await token.approve(burner.address, burnFee);
     tx = await will.createWill(recipient, 5, false, {value: (1 * WEI)});
     //console.log(tx);
     id = tx.logs[0].args._id;
@@ -294,6 +299,7 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
 
   it('Fail to deploy will', async() => {
     try{
+      await token.approve(burner.address, burnFee);
       await will.createWill(recipient, 5, true, {value: (5 * WEI)});
     }catch(e){
       console.log('Contract is closed');
