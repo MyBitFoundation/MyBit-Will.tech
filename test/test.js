@@ -285,7 +285,7 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
     await will.closeContract();
   });
 
-  it('Fail to close factory', async() => {
+  it('Fail to close contract', async() => {
     try {
       await will.closeContract();
     }catch(e) {
