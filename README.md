@@ -3,7 +3,7 @@
 
 :ticket: Wills Dapp powered by the MyBit Platform™
 
-This dapp allows users to create a [Will](https://en.wikipedia.org/wiki/Will_and_testament)
+This dapp allows users to create a [Will](https://en.wikipedia.org/wiki/Will_and_testament) for a benificiary or benificiaries of their choosing. 
 
 
 ## Setup
