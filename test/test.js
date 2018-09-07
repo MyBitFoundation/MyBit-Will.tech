@@ -9,8 +9,8 @@ const ContractManager = artifacts.require('./ContractManager.sol');
 const WEI = 1000000000000000000;
 const deadline = 5;
 
-const tokenSupply = 100000;
-const tokenPerAccount = 1000;
+const tokenSupply = 1000000;
+const tokenPerAccount = 10000;
 
 let burnFee = 250;
 
@@ -34,20 +34,6 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
 
     assert.equal(await token.totalSupply(), tokenSupply);
     assert.equal(await token.balanceOf(owner), tokenSupply);
-  });
-
-  // Give every user tokenPerAccount amount of tokens
-  it("Spread tokens to users", async () => {
-    for (var i = 1; i < web3.eth.accounts.length; i++) {
-      //console.log(web3.eth.accounts[i]);
-      await token.transfer(web3.eth.accounts[i], tokenPerAccount);
-      let userBalance = await token.balanceOf(web3.eth.accounts[i]);
-      assert.equal(userBalance, tokenPerAccount);
-    }
-    // Check token ledger is correct
-    const totalTokensCirculating = (web3.eth.accounts.length - 1) * (tokenPerAccount);
-    const remainingTokens = tokenSupply - totalTokensCirculating;
-    assert.equal(await token.balanceOf(owner), remainingTokens);
   });
 
   it('Deploy Database', async() => {
@@ -81,6 +67,7 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
     burnFee = 200;
     await will.changeMYBFee(burnFee);
   });
+
 
   it('Fail to create will', async() => {
     try{
@@ -118,6 +105,15 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
     assert.equal(recipient, willRecipient);
     assert.equal((5 * WEI), willAmount);
     assert.equal(blockNumber + 5, willExpiration);
+  });
+
+  it('Fail to create same will', async() => {
+    try{
+      await token.approve(burner.address, burnFee);
+      tx = await will.createWill(recipient, 5, true, {value: (5 * WEI)});
+    } catch(e){
+      console.log('Will is already created');
+    }
   });
 
   it('Fail to revoke will', async() => {
