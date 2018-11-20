@@ -9,10 +9,10 @@ const ContractManager = artifacts.require('./ContractManager.sol');
 const WEI = 1000000000000000000;
 const deadline = 5;
 
-const tokenSupply = 1000000;
-const tokenPerAccount = 10000;
+const tokenSupply = 1000000*WEI;
+const tokenPerAccount = 10000*WEI;
 
-let burnFee = 250;
+let burnFee = 250*WEI;
 
 contract('Will - Deploying and storing all contracts + validation', async (accounts) => {
   const owner = web3.eth.accounts[0];
