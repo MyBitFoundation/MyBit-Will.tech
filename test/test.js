@@ -74,7 +74,7 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
       await token.approve(burner.address, burnFee);
       await will.createWill(recipient, 0, true, {value: (5 * WEI)});
     } catch(e){
-      console.log('Cant have 0 blocks between proof');
+      console.log('Cant have 0 seconds between proof');
     }
   });
 
@@ -93,7 +93,7 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
     //console.log(tx);
     id = tx.logs[0].args._id;
     //console.log(id)
-    blockNumber = await web3.eth.getBlock('latest').number;
+    now = await web3.eth.getBlock('latest').timestamp;
 
     willStruct = await will.getWill(id);
     willOwner = willStruct[0];
@@ -104,7 +104,7 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
     assert.equal(owner, willOwner);
     assert.equal(recipient, willRecipient);
     assert.equal((5 * WEI), willAmount);
-    assert.equal(blockNumber + 5, willExpiration);
+    assert.equal(now + 5, willExpiration);
   });
 
   it('Fail to create same will', async() => {
@@ -130,11 +130,11 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
 
   it('Create will', async() => {
     await token.approve(burner.address, burnFee);
-    tx = await will.createWill(recipient, 5, true, {value: (5 * WEI)});
+    tx = await will.createWill(recipient, 1000, true, {value: (5 * WEI)});
     //console.log(tx);
     id = tx.logs[0].args._id;
     //console.log(id)
-    blockNumber = await web3.eth.getBlock('latest').number;
+    now = await web3.eth.getBlock('latest').timestamp;
 
     willStruct = await will.getWill(id);
     willOwner = willStruct[0];
@@ -145,7 +145,7 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
     assert.equal(owner, willOwner);
     assert.equal(recipient, willRecipient);
     assert.equal((5 * WEI), willAmount);
-    assert.equal(blockNumber + 5, willExpiration);
+    assert.equal(now + 1000, willExpiration);
   });
 
   it('Fail to create duplicate will', async() => {
@@ -160,16 +160,25 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
     oldExpiration = willExpiration;
     console.log('Old Expiration: ' + oldExpiration);
 
+    //Advance time
+    web3.currentProvider.send({
+        jsonrpc: "2.0",
+        method: "evm_increaseTime",
+        params: [500], id: 0
+    }, function(){
+      console.log('Move forward in time');
+    });
+
     await will.proveExistence(id);
 
-    blockNumber = await web3.eth.getBlock('latest').number;
-    console.log('Block Number: ' + blockNumber);
+    now = await web3.eth.getBlock('latest').timestamp;
+    console.log('Time: ' + now);
 
     willStruct = await will.getWill(id)
     willExpiration = willStruct[4].toNumber();
     console.log('New Expiration: ' + willExpiration);
 
-    assert.equal(oldExpiration + 5, willExpiration);
+    assert.equal(oldExpiration + 1000, willExpiration);
   });
 
   it('Spam proveExistence', async() => {
@@ -186,13 +195,13 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
     console.log('Old Expiration: ' + oldExpiration);
 
     willStruct = await will.getWill(id)
-    willBlocks = willStruct[3].toNumber();
-    console.log('Blocks between proofs: ' + willBlocks);
+    willSec = willStruct[3].toNumber();
+    console.log('Sec between proofs: ' + willSec);
 
-    await will.changeBlocksBetweenProofs(id, 1);
+    await will.changeSecBetweenProofs(id, 1);
     willStruct = await will.getWill(id);
-    willBlocks = willStruct[3].toNumber();
-    assert.equal(1, willBlocks);
+    willSec = willStruct[3].toNumber();
+    assert.equal(1, willSec);
 
     //await will.proveExistence(id);
 
@@ -218,20 +227,21 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
   });
 
   it('Progress expiration', async() => {
-    blockNumber = await web3.eth.getBlock('latest').number;
-    console.log('Block Number: ' + blockNumber);
+    now = await web3.eth.getBlock('latest').timestamp;
+    console.log('Time: ' + now);
 
     willStruct = await will.getWill(id);
     willExpiration = willStruct[4].toNumber();
     console.log('Will Expiration: ' + willExpiration);
 
-    blockTillExpiration = willExpiration - blockNumber;
-
-    for(i=0; i<blockTillExpiration; i++){
-      //Need to progress the block number by blockTillExpiration
-      await will.changeBlocksBetweenProofs(id, 1); //Should move up the block number without changing anything
-      console.log('Count: ' + i);
-    }
+    timeTillExpiration = willExpiration - now;
+    web3.currentProvider.send({
+        jsonrpc: "2.0",
+        method: "evm_increaseTime",
+        params: [timeTillExpiration], id: 0
+    }, function(){
+      console.log('Move forward in time');
+    });
   });
 
   it('Fail to revoke will', async() => {

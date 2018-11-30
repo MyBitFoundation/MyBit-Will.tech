@@ -4,7 +4,7 @@ import './SafeMath.sol';
 import './Database.sol';
 import './MyBitBurner.sol';
 
-// @notice This contract allows someone to leave ETH for another user in the case that they become unresponsive for x blocks
+// @notice This contract allows someone to leave ETH for another user in the case that they become unresponsive for x sec
 // TODO: can structure this to have the recipient claim creators death, which starts the proofExpiration. Problem with this approach is that we need a good way to notify the creator.
 contract Wills {
   using SafeMath for uint;
@@ -23,12 +23,12 @@ contract Wills {
   }
 
   // @param (address) _recipient = Address of the recipient of the will`
-  // @param (uint) _blocksBetweenProofs = Number of blocks required without proof of existence before will funds are released
+  // @param (uint) _secBetweenProofs = Number of sec required without proof of existence before will funds are released
   // @param (bool) _revokeable = Boolean that sets whether this will can be revoked by the creator
-  function createWill(address _recipient, uint _blocksBetweenProofs, bool _revokeable)
+  function createWill(address _recipient, uint _secBetweenProofs, bool _revokeable)
   external
   payable
-  notZero(_blocksBetweenProofs)
+  notZero(_secBetweenProofs)
   validAddress(_recipient)
   returns (bytes32 id) {
     require(!expired);
@@ -40,8 +40,8 @@ contract Wills {
     database.setAddress(keccak256(abi.encodePacked('willCreator', id)), msg.sender);
     database.setAddress(keccak256(abi.encodePacked('willRecipient', id)), _recipient);
     database.setUint(keccak256(abi.encodePacked('willAmount', id)), msg.value);
-    database.setUint(keccak256(abi.encodePacked('willBlocksBetweenProofs', id)), _blocksBetweenProofs);
-    database.setUint(keccak256(abi.encodePacked('willProofExpiration', id)), _blocksBetweenProofs.add(block.number));
+    database.setUint(keccak256(abi.encodePacked('willSecBetweenProofs', id)), _secBetweenProofs);
+    database.setUint(keccak256(abi.encodePacked('willProofExpiration', id)), _secBetweenProofs.add(block.timestamp));
     database.setBool(keccak256(abi.encodePacked('willRevokeable', id)), _revokeable);
 
     emit LogWillCreated(msg.sender, _recipient, msg.value, id);
@@ -52,8 +52,8 @@ contract Wills {
   function proveExistence(bytes32 _id)
   external
   onlyCaller( database.addressStorage(keccak256(abi.encodePacked('willCreator', _id))) ){
-    require( database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))).sub(block.number) < database.uintStorage(keccak256(abi.encodePacked('willBlocksBetweenProofs', _id))) );  // Can only extend proofExpiration once
-    database.setUint(keccak256(abi.encodePacked('willProofExpiration', _id)), database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))).add( database.uintStorage(keccak256(abi.encodePacked('willBlocksBetweenProofs', _id))) ) );
+    require( database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))).sub(block.timestamp) < database.uintStorage(keccak256(abi.encodePacked('willSecBetweenProofs', _id))) );  // Can only extend proofExpiration once
+    database.setUint(keccak256(abi.encodePacked('willProofExpiration', _id)), database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))).add( database.uintStorage(keccak256(abi.encodePacked('willSecBetweenProofs', _id))) ) );
   }
 
   // @param (bytes32) _id = Bill ID that is returned by createWill()
@@ -61,12 +61,12 @@ contract Wills {
   external
   isRevokeable(_id)
   onlyCaller( database.addressStorage(keccak256(abi.encodePacked('willCreator', _id))) ){
-    require( block.number < database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))) );
+    require( block.timestamp < database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))) );
     uint amountWEI = database.uintStorage(keccak256(abi.encodePacked('willAmount', _id)));
     database.deleteAddress(keccak256(abi.encodePacked('willCreator', _id)));
     database.deleteAddress(keccak256(abi.encodePacked('willRecipient', _id)));
     database.deleteUint(keccak256(abi.encodePacked('willAmount', _id)));
-    database.deleteUint(keccak256(abi.encodePacked('willBlocksBetweenProofs', _id)));
+    database.deleteUint(keccak256(abi.encodePacked('willSecBetweenProofs', _id)));
     database.deleteUint(keccak256(abi.encodePacked('willProofExpiration', _id)));
     database.deleteBool(keccak256(abi.encodePacked('willRevokeable', _id)));
     msg.sender.transfer(amountWEI);
@@ -77,12 +77,12 @@ contract Wills {
   function claimWill(bytes32 _id)
   external
   onlyCaller( database.addressStorage(keccak256(abi.encodePacked('willRecipient', _id))) ){
-    require( block.number >= database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))) );
+    require( block.timestamp >= database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))) );
     uint amountWEI = database.uintStorage(keccak256(abi.encodePacked('willAmount', _id)));
     database.deleteAddress(keccak256(abi.encodePacked('willCreator', _id)));
     database.deleteAddress(keccak256(abi.encodePacked('willRecipient', _id)));
     database.deleteUint(keccak256(abi.encodePacked('willAmount', _id)));
-    database.deleteUint(keccak256(abi.encodePacked('willBlocksBetweenProofs', _id)));
+    database.deleteUint(keccak256(abi.encodePacked('willSecBetweenProofs', _id)));
     database.deleteUint(keccak256(abi.encodePacked('willProofExpiration', _id)));
     database.deleteBool(keccak256(abi.encodePacked('willRevokeable', _id)));
     msg.sender.transfer(amountWEI);
@@ -90,12 +90,12 @@ contract Wills {
   }
 
   // @param (bytes32) _id = Bill ID that is returned by createWill()
-  // @param (uint) _newDesiredBlocks = Number of blocks required without proof of existence before will funds are released
-  function changeBlocksBetweenProofs(bytes32 _id, uint _newDesiredBlocks)
+  // @param (uint) _newDesiredSec = Number of sec required without proof of existence before will funds are released
+  function changeSecBetweenProofs(bytes32 _id, uint _newDesiredSec)
   external
   onlyCaller( database.addressStorage(keccak256(abi.encodePacked('willCreator', _id))) )
-  notZero(_newDesiredBlocks) {
-      database.setUint(keccak256(abi.encodePacked('willBlocksBetweenProofs', _id)), _newDesiredBlocks);
+  notZero(_newDesiredSec) {
+      database.setUint(keccak256(abi.encodePacked('willSecBetweenProofs', _id)), _newDesiredSec);
 
   }
 
@@ -128,7 +128,7 @@ contract Wills {
       database.addressStorage(keccak256(abi.encodePacked('willCreator', _id))),
       database.addressStorage(keccak256(abi.encodePacked('willRecipient', _id))),
       database.uintStorage(keccak256(abi.encodePacked('willAmount', _id))),
-      database.uintStorage(keccak256(abi.encodePacked('willBlocksBetweenProofs', _id))),
+      database.uintStorage(keccak256(abi.encodePacked('willSecBetweenProofs', _id))),
       database.uintStorage(keccak256(abi.encodePacked('willProofExpiration', _id))),
       database.boolStorage(keccak256(abi.encodePacked('willRevokeable', _id)))
     );
