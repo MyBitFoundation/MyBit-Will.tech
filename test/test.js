@@ -24,7 +24,9 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
   let burner;
   let will;
   let id;
+  let ercId;
   let willExpiration;
+  let tx;
 
   // Deploy token contract
   it ('Deploy MyBit Token contract', async() => {
@@ -81,9 +83,83 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
   it('Fail to create will', async() => {
     try{
       await token.approve(burner.address, burnFee);
-      await will.createWill('0', 5, true, {value: (5 * WEI)});
+      const willAddress = await will.address;
+      await token.approve(will.address, 5 * WEI);
+      const tokenAddress = await token.address;
+      await will.createERC20Will('0', 1000, true, tokenAddress, 5 * WEI);
     } catch(e){
       console.log('Invalid recipient address');
+    }
+  });
+
+  it('Fail to create erc20 will', async() => {
+    try{
+      await token.approve(burner.address, burnFee);
+      const willAddress = await will.address;
+      await token.approve(will.address, 5 * WEI);
+      const tokenAddress = await token.address;
+      await will.createERC20Will('0', 1000, true, tokenAddress, 5 * WEI);
+    } catch(e){
+      console.log('Invalid recipient address');
+    }
+  });
+
+  it('Fail to create erc20 will', async() => {
+    try{
+      await token.approve(burner.address, burnFee);
+      const willAddress = await will.address;
+      await token.approve(will.address, 5 * WEI);
+      const tokenAddress = await token.address;
+      await will.createERC20Will(recipient, 0, true, tokenAddress, 5 * WEI);
+    } catch(e){
+      console.log('Cant have 0 seconds between proof');
+    }
+  });
+
+  it('Fail to create erc20 will', async() => {
+    try{
+      await token.approve(burner.address, burnFee);
+      const willAddress = await will.address;
+      await token.approve(will.address, 5 * WEI);
+      await will.createERC20Will(recipient, 1000, true, '0', 5 * WEI);
+    } catch(e){
+      console.log('Invalid token address');
+    }
+  });
+  
+  it('Create erc20 will', async() => {
+    await token.approve(burner.address, burnFee);
+    const willAddress = await will.address;
+    await token.approve(will.address, 5 * WEI);
+    const tokenAddress = await token.address;
+    tx = await will.createERC20Will(recipient, 1000, true, tokenAddress, 5 * WEI);
+    //console.log(tx);
+    ercId = tx.logs[0].args._id;
+    //console.log(id)
+    now = await web3.eth.getBlock('latest').timestamp;
+
+    willStruct = await will.getWill(ercId);
+    willOwner = willStruct[0];
+    willRecipient = willStruct[1];
+    willAmount = willStruct[2].toNumber();
+    willExpiration = willStruct[4].toNumber();
+    willTokenAddress = willStruct[6];
+
+    assert.equal(owner, willOwner);
+    assert.equal(recipient, willRecipient);
+    assert.equal((5 * WEI), willAmount);
+    assert.equal(now + 1000, willExpiration);
+    assert.equal(token.address, willTokenAddress);
+  });
+
+  it('Fail to create same erc20 will', async() => {
+    try{
+      await token.approve(burner.address, burnFee);
+      const willAddress = await will.address;
+      await token.approve(will.address, 5 * WEI);
+      tx = await will.createERC20Will(recipient, 1000, true, tokenAddress, 5 * WEI);
+    } catch(e){
+      console.log('Will is already created');
     }
   });
 
@@ -126,6 +202,35 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
 
   it('Revoke will', async() => {
     await will.revokeWill(id);
+  });
+
+  it('Revoke will erc20', async() => {
+    await will.revokeWill(ercId);
+  });
+
+  it('Create erc20 will', async() => {
+    await token.approve(burner.address, burnFee);
+    const willAddress = await will.address;
+    await token.approve(will.address, 5 * WEI);
+    const tokenAddress = await token.address;
+    tx = await will.createERC20Will(recipient, 1000, true, tokenAddress, 5 * WEI);
+    //console.log(tx);
+    ercId = tx.logs[0].args._id;
+    //console.log(id)
+    now = await web3.eth.getBlock('latest').timestamp;
+
+    willStruct = await will.getWill(ercId);
+    willOwner = willStruct[0];
+    willRecipient = willStruct[1];
+    willAmount = willStruct[2].toNumber();
+    willExpiration = willStruct[4].toNumber();
+    willTokenAddress = willStruct[6];
+
+    assert.equal(owner, willOwner);
+    assert.equal(recipient, willRecipient);
+    assert.equal((5 * WEI), willAmount);
+    assert.equal(now + 1000, willExpiration);
+    assert.equal(token.address, willTokenAddress);
   });
 
   it('Create will', async() => {
@@ -263,6 +368,23 @@ contract('Will - Deploying and storing all contracts + validation', async (accou
     await will.claimWill(id, {from:recipient});
 
     newBalance = await web3.eth.getBalance(recipient);
+    console.log('New Balance: ' + newBalance);
+
+    assert.equal(BigNumber(oldBalance).lt(newBalance), true);
+  });
+
+  it('Claim erc20 will', async() => {
+    ercWillStruct = await will.getWill(ercId);
+    willAmount = willStruct[2].toNumber();
+    console.log('Will Amount: ' + willAmount);
+
+    oldBalance = await token.balanceOf(recipient);
+    console.log('Old Balance: ' + oldBalance);
+
+    //Need to switch account to recipient
+    await will.claimWill(ercId, {from:recipient});
+
+    newBalance = await token.balanceOf(recipient);
     console.log('New Balance: ' + newBalance);
 
     assert.equal(BigNumber(oldBalance).lt(newBalance), true);
